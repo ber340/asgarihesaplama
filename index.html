@@ -133,14 +133,14 @@
                         <div class="single-result">
                             <div class="method-title">📅 30 Gün / 225 Saat Metodu</div>
                             <div class="result-value" id="monthlyTotalPay225">— ₺</div>
-                            <p class="explanation">(Aylık maaş + fazla mesai ücreti)<br>Haftalık fazla mesai: <span id="weeklyOvertimeHours">0</span> saat</p>
+                            <p class="explanation">(Temel maaş + fazla mesai ücreti)<br>Haftalık fazla mesai: <span id="weeklyOvertimeHours">0</span> saat</p>
                         </div>
                         
                         <!-- 195 Saat Metodu Sonucu -->
                         <div class="single-result">
                             <div class="method-title">📊 26 Gün / 195 Saat Metodu</div>
                             <div class="result-value" id="monthlyTotalPay195">— ₺</div>
-                            <p class="explanation">(Aylık maaş + fazla mesai ücreti)<br>Haftalık fazla mesai: <span id="weeklyOvertimeHours195">0</span> saat</p>
+                            <p class="explanation">(Temel maaş + fazla mesai ücreti)<br>Haftalık fazla mesai: <span id="weeklyOvertimeHours195">0</span> saat</p>
                         </div>
                     </div>
                     <!-- PAZAR EK GETİRİSİ BÖLÜMÜ BURADA KALDIRILDI -->
@@ -228,14 +228,16 @@
             document.getElementById('halfOvertimeRate195').textContent = formatCurrency((hourlyRate195 * 1.5) / 2);
         }
 
-        // Fazla mesai hesaplama fonksiyonu (PAZAR ÇIKARILDI)
+        // FAZLA MESAI HESAPLAMA FONKSIYONU (PART-TIME DÜZELTMESI)
         function calculateOvertime() {
             const monthlySalary = parseFloat(document.getElementById('monthlySalary').value) || 28075.50;
             const workDays = parseInt(document.getElementById('workDays').value);
             const dailyHours = parseFloat(document.getElementById('dailyHours').value);
             
-            // HAFTALIK FAZLA MESAI HESABI (Pazar yok)
+            // 1. HAFTALIK TOPLAM ÇALIŞMA SAATINI HESAPLA
             const weeklyTotalHours = dailyHours * workDays;
+            
+            // 2. HAFTALIK FAZLA MESAI SAATINI HESAPLA (45 saati aşan kısım)
             let weeklyOvertimeHours = weeklyTotalHours - 45;
             if (weeklyOvertimeHours < 0) weeklyOvertimeHours = 0;
 
@@ -243,17 +245,38 @@
             document.getElementById('weeklyOvertimeHours').textContent = weeklyOvertimeHours.toFixed(1);
             document.getElementById('weeklyOvertimeHours195').textContent = weeklyOvertimeHours.toFixed(1);
             
-            // Metod 1: 225 Saat üzerinden hesapla
+            // 3. İKİ METOD İÇİN AYRI AYRI HESAPLA
+            // --- METOD 1: 225 Saat üzerinden hesapla ---
             const hourlyRate225 = monthlySalary / 225;
             const overtimeRate225 = hourlyRate225 * 1.5;
-            const weeklyOvertimePay225 = weeklyOvertimeHours * overtimeRate225;
-            const monthlyTotalPay225 = monthlySalary + (weeklyOvertimePay225 * 4.33);
             
-            // Metod 2: 195 Saat üzerinden hesapla
+            // Temel maaş (çalışılan normal saatler için)
+            const weeklyNormalHours225 = weeklyTotalHours - weeklyOvertimeHours; // Fazla mesai hariç saat
+            const weeklyNormalPay225 = weeklyNormalHours225 * hourlyRate225;
+            const monthlyNormalPay225 = weeklyNormalPay225 * 4.33;
+            
+            // Fazla mesai ücreti
+            const weeklyOvertimePay225 = weeklyOvertimeHours * overtimeRate225;
+            const monthlyOvertimePay225 = weeklyOvertimePay225 * 4.33;
+            
+            // Toplam ücret (Temel + Fazla Mesai)
+            const monthlyTotalPay225 = monthlyNormalPay225 + monthlyOvertimePay225;
+            
+            // --- METOD 2: 195 Saat üzerinden hesapla ---
             const hourlyRate195 = monthlySalary / 195;
             const overtimeRate195 = hourlyRate195 * 1.5;
+            
+            // Temel maaş (çalışılan normal saatler için)
+            const weeklyNormalHours195 = weeklyTotalHours - weeklyOvertimeHours;
+            const weeklyNormalPay195 = weeklyNormalHours195 * hourlyRate195;
+            const monthlyNormalPay195 = weeklyNormalPay195 * 4.33;
+            
+            // Fazla mesai ücreti
             const weeklyOvertimePay195 = weeklyOvertimeHours * overtimeRate195;
-            const monthlyTotalPay195 = monthlySalary + (weeklyOvertimePay195 * 4.33);
+            const monthlyOvertimePay195 = weeklyOvertimePay195 * 4.33;
+            
+            // Toplam ücret (Temel + Fazla Mesai)
+            const monthlyTotalPay195 = monthlyNormalPay195 + monthlyOvertimePay195;
             
             // Sonuçları göster
             document.getElementById('monthlyTotalPay225').textContent = formatCurrency(monthlyTotalPay225);
