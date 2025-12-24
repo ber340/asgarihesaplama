@@ -328,13 +328,14 @@
                         <div class="single-result">
                             <div class="method-title">📅 30 Gün / 225 Saat Metodu</div>
                             <div class="result-value" id="monthlyTotalPay225">— ₺</div>
-                            <p class="explanation"<br>Haftalık fazla mesai: <span id="weeklyOvertimeHours">0</span> saat</p>
+                            <p class="explanation">Haftalık fazla mesai: <span id="weeklyOvertimeHours">0</span> saat</p>
                         </div>
                         
                         <!-- 195 Saat Metodu Sonucu -->
                         <div class="single-result">
                             <div class="method-title">📊 26 Gün / 195 Saat Metodu</div>
                             <div class="result-value" id="monthlyTotalPay195">— ₺</div>
+                            <p class="explanation">Haftalık fazla mesai: <span id="weeklyOvertimeHours195">0</span> saat</p>
                         </div>
                     </div>
                 </div>
@@ -357,12 +358,12 @@
                 <div class="single-result">
                     <div class="method-title">30 Gün / 225 Saat Metoduna Göre</div>
                     <div class="result-value" id="sundayOnlyResult225">— ₺</div>
-                    <div class="daily-result-value" id="sundayDailyResult225">— ₺ (günlük)</div>
+                    <div class="daily-result-value" id="sundayDailyResult225">— ₺</div>
                 </div>
                 <div class="single-result">
                     <div class="method-title">26 Gün / 195 Saat Metoduna Göre</div>
                     <div class="result-value" id="sundayOnlyResult195">— ₺</div>
-                    <div class="daily-result-value" id="sundayDailyResult195">— ₺ (günlük)</div>
+                    <div class="daily-result-value" id="sundayDailyResult195">— ₺</div>
                 </div>
             </div>
             <p class="note">Not: İlk 7.5 saat %100, fazlası %250 zamlıdır.</p>
@@ -370,8 +371,9 @@
 
         <!-- ASGARİ ÜCRET BİLGİLENDİRMESİ -->
         <div class="info-box">
+            <h2>2026 Yılı Asgari Ücret Hesaplaması</h2>
+            <p>Net Asgari Ücret: <strong>28.075,50 ₺</strong></p>
            
-            
            <div class="wage-comparison">
                 <!-- Metod 1: 30 Gün / 225 Saat -->
                 <div class="wage-method">
@@ -430,7 +432,7 @@
         </div>
         
         <footer>
-            
+            <p>Bu araç bilgilendirme amaçlıdır. Kesin sonuçlar için muhasebe biriminize danışınız.</p>
         </footer>
     </div>
 
@@ -535,9 +537,8 @@
             document.getElementById('sundayOnlyResult195').textContent = formatCurrency(monthlySundayPay195);
             
             // Günlük ücretleri göster
-            document.getElementById('sundayDailyResult225').textContent = formatCurrency(dailySundayPay225) + " (günlük)";
-            document.getElementById('sundayDailyResult195').textContent = formatCurrency(dailySundayPay195) + " (günlük)";
-            
+            document.getElementById('sundayDailyResult225').textContent = formatCurrency(dailySundayPay225);
+            document.getElementById('sundayDailyResult195').textContent = formatCurrency(dailySundayPay195);
         }
         
         // Para birimi formatlama fonksiyonu
