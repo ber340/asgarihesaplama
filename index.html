@@ -40,6 +40,11 @@
         .single-result .result-value { font-size: 32px; font-weight: bold; color: #d35400; margin: 15px 0; }
         .explanation { font-size: 14px; color: #666; margin-top: 5px; }
         
+        /* Pazar Özel Stilleri */
+        .sunday-section { background-color: #fff0f5; border-left-color: #e91e63; }
+        .sunday-btn { background-color: #e91e63; }
+        .sunday-btn:hover { background-color: #c2185b; }
+        
         .legal-info { margin-top: 30px; padding: 20px; background-color: #fff8e1; border-radius: 8px; font-size: 14px; border: 1px solid #ffecb3; }
         footer { text-align: center; margin-top: 30px; color: #777; font-size: 14px; border-top: 1px solid #eee; padding-top: 20px; }
         .citation { display: none; }
@@ -85,7 +90,7 @@
         </div>
 
         <div class="calculator-grid">
-            <!-- Girdi Bölümü -->
+            <!-- Girdi Bölümü (PAZAR DAHİL) -->
             <div class="input-section">
                 <h2>Fazla Mesai Hesaplama</h2>
                 <p>Lütfen aşağıdaki bilgileri doldurup "HESAPLA" butonuna basınız.</p>
@@ -110,6 +115,13 @@
                     <input type="number" id="dailyHours" min="1" max="15" step="0.5" value="7.5">
                     <p class="explanation">Haftalık 45 saati aşan kısım otomatik fazla mesai sayılacaktır.</p>
                 </div>
+
+                <!-- PAZAR GÜNÜ GİRDİSİ (ANA HESAPLAMA İÇİN) -->
+                <div class="form-group">
+                    <label for="sundayHours"><strong>📅 Pazar Günü Çalışma Saatiniz</strong></label>
+                    <input type="number" id="sundayHours" min="0" max="24" step="0.5" value="0">
+                    <p class="explanation">Pazar günü (hafta tatili) kaç saat çalıştığınızı giriniz.</p>
+                </div>
                 
                 <button class="calculate-btn" onclick="calculateOvertime()">HESAPLA</button>
             </div>
@@ -118,37 +130,88 @@
             <div class="results-section">
                 <div class="final-result">
                     <div class="result-title">Aylık Toplam Alınacak Net Ücret</div>
-                    <p class="explanation">Aşağıda, her iki hesap metoduna göre aylık toplam ücretiniz (maaş + fazla mesai) gösterilmektedir.</p>
+                    <p class="explanation">Aşağıda, her iki hesap metoduna göre aylık toplam ücretiniz (maaş + fazla mesai + pazar çalışması) gösterilmektedir.</p>
                     
                     <div class="result-container">
                         <!-- 225 Saat Metodu Sonucu -->
                         <div class="single-result">
                             <div class="method-title">📅 30 Gün / 225 Saat Metodu</div>
                             <div class="result-value" id="monthlyTotalPay225">— ₺</div>
-                            <p class="explanation">(Aylık maaş + fazla mesai ücreti)<br>Haftalık fazla mesai: <span id="weeklyOvertimeHours">0</span> saat</p>
+                            <p class="explanation">(Aylık maaş + fazla mesai ücreti + pazar çalışması)<br>Haftalık fazla mesai: <span id="weeklyOvertimeHours">0</span> saat</p>
                         </div>
                         
                         <!-- 195 Saat Metodu Sonucu -->
                         <div class="single-result">
                             <div class="method-title">📊 26 Gün / 195 Saat Metodu</div>
                             <div class="result-value" id="monthlyTotalPay195">— ₺</div>
-                            <p class="explanation">(Aylık maaş + fazla mesai ücreti)<br>Haftalık fazla mesai: <span id="weeklyOvertimeHours195">0</span> saat</p>
+                            <p class="explanation">(Aylık maaş + fazla mesai ücreti + pazar çalışması)<br>Haftalık fazla mesai: <span id="weeklyOvertimeHours195">0</span> saat</p>
+                        </div>
+                    </div>
+
+                    <!-- PAZAR EK ÜCRETİ DETAYI -->
+                    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px dashed #ccc;">
+                        <div class="result-title">Pazar Çalışmasının Ek Getirisi (Aylık)</div>
+                        <div class="result-container">
+                            <div class="single-result">
+                                <div class="method-title">30 Gün / 225 Saat Metoduna Göre</div>
+                                <div class="result-value" id="sundayBonus225">— ₺</div>
+                                <p class="explanation">Sadece pazar çalışmanızın ek getirisi</p>
+                            </div>
+                            <div class="single-result">
+                                <div class="method-title">26 Gün / 195 Saat Metoduna Göre</div>
+                                <div class="result-value" id="sundayBonus195">— ₺</div>
+                                <p class="explanation">Sadece pazar çalışmanızın ek getirisi</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         
+        <!-- BAĞIMSIZ PAZAR GÜNÜ HESAPLAYICISI -->
+        <div class="info-box sunday-section">
+            <h3>🔍 Sadece Pazar Günü Çalışma Hesaplayıcısı</h3>
+            <p>Bu araç ile <strong>sadece Pazar günü çalışmanızın</strong> aylık maaşınıza ne kadar ek getiri sağlayacağını hesaplayabilirsiniz. Lütfen aylık net maaşınızı ve Pazar günü çalışmak istediğiniz saati girin.</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                <div class="form-group">
+                    <label for="sundayCalcSalary">Aylık Net Maaşınız (TL)</label>
+                    <input type="number" id="sundayCalcSalary" min="0" step="100" value="28075.50">
+                </div>
+                <div class="form-group">
+                    <label for="sundayCalcHours"><strong>Pazar Çalışma Saatiniz</strong></label>
+                    <input type="number" id="sundayCalcHours" min="0" max="24" step="0.5" value="8">
+                    <p class="explanation">Pazar günü kaç saat çalışacağınızı girin.</p>
+                </div>
+            </div>
+            
+            <button class="calculate-btn sunday-btn" onclick="calculateSundayOnly()">PAZAR ÜCRETİNİ HESAPLA</button>
+            
+            <div class="result-container" style="margin-top:30px;">
+                <div class="single-result">
+                    <div class="method-title">30 Gün / 225 Saat Metoduna Göre</div>
+                    <div class="result-value" id="sundayOnlyResult225">— ₺</div>
+                    <p class="explanation" id="sundayDetail225">Pazar çalışmanızın aylık ek getirisi.</p>
+                </div>
+                <div class="single-result">
+                    <div class="method-title">26 Gün / 195 Saat Metoduna Göre</div>
+                    <div class="result-value" id="sundayOnlyResult195">— ₺</div>
+                    <p class="explanation" id="sundayDetail195">Pazar çalışmanızın aylık ek getirisi.</p>
+                </div>
+            </div>
+            <p class="note">Not: Hesaplama, Pazar gününün ilk 7.5 saati için %100, 7.5 saati aşan kısım için ise %150 (toplam %250) zam üzerinden yapılır.</p>
+        </div>
+        
         <!-- Yasal Bilgilendirme -->
         <div class="legal-info">
             <h3>⚖️ Yasal Bilgilendirme</h3>
             <p><strong>Yasal Dayanak:</strong> 4857 sayılı İş Kanunu'nun 41. maddesine göre, haftalık çalışma süresi genel olarak 45 saattir. Bu süreyi aşan çalışmalar fazla mesaidir ve her bir saati için normal ücretin %50 fazlası ödenmelidir.</p>
+            <p><strong>Hafta Tatili (Pazar) Çalışması:</strong> Pazar günü (hafta tatili) çalışmanın her saati için normal ücretin %100 fazlası ödenir. Pazar günü 7.5 saati aşan çalışmalar için, aşan kısma hem hafta tatili (%100) hem de fazla mesai (%50) zammı birlikte uygulanır (toplam %250).</p>
             <p><strong>Önemli Hususlar:</strong></p>
             <ul>
-                <li>Fazla mesai için çalışanın <strong>yazılı onayı</strong> genellikle gereklidir.</li>
+                <li>Fazla mesai ve hafta tatili çalışması için çalışanın <strong>yazılı onayı</strong> genellikle gereklidir.</li>
                 <li>Yıllık fazla mesai sınırı <strong>270 saat</strong>tir.</li>
-            </ul>
-            <p><em>Bu araç bilgilendirme amaçlıdır. Kesin ve resmi hesaplamalar için muhasebe biriminize veya bir iş hukuku uzmanına danışınız.</em></p>
+                <li>Bu araç bilgilendirme amaçlıdır. Kesin ve resmi hesaplamalar için muhasebe biriminize veya bir iş hukuku uzmanına danışınız.</em></p>
         </div>
         
         <footer>
@@ -184,37 +247,101 @@
             document.getElementById('halfOvertimeRate195').textContent = formatCurrency((hourlyRate195 * 1.5) / 2);
         }
 
-        // Fazla mesai hesaplama fonksiyonu
+        // Fazla mesai hesaplama fonksiyonu (PAZAR DAHİL)
         function calculateOvertime() {
             const monthlySalary = parseFloat(document.getElementById('monthlySalary').value) || 28075.50;
             const workDays = parseInt(document.getElementById('workDays').value);
             const dailyHours = parseFloat(document.getElementById('dailyHours').value);
-            
-            // Haftalık toplam ve fazla mesai saatini hesapla
-            const weeklyTotalHours = dailyHours * workDays;
-            let weeklyOvertimeHours = weeklyTotalHours - 45;
+            const sundayHours = parseFloat(document.getElementById('sundayHours').value) || 0;
+
+            // 1. HAFTALIK FAZLA MESAI HESABI (Pazar hariç)
+            // Pazartesi-Cumartesi toplam çalışma süresi
+            const weeklyWorkDays = Math.min(workDays, 6); // Pazar ayrı hesaplanacağı için en fazla 6 gün say
+            const weeklyNormalHours = dailyHours * weeklyWorkDays;
+            let weeklyOvertimeHours = weeklyNormalHours - 45;
             if (weeklyOvertimeHours < 0) weeklyOvertimeHours = 0;
-            
-            // Haftalık fazla mesai saatini göster (her iki metod için de aynı)
+
+            // Haftalık fazla mesai saatini göster
             document.getElementById('weeklyOvertimeHours').textContent = weeklyOvertimeHours.toFixed(1);
             document.getElementById('weeklyOvertimeHours195').textContent = weeklyOvertimeHours.toFixed(1);
-            
-            // Metod 1: 225 Saat üzerinden hesapla
+
+            // 2. PAZAR (HAFTA TATİLİ) ÜCRET HESABI
+            // Pazar çalışması iki kısma ayrılır: Normal saatler ve fazla mesai
+            const sundayOvertime = Math.max(sundayHours - 7.5, 0); // Pazardaki fazla mesai (7.5 saati aşan kısım)
+            const sundayNormal = sundayHours - sundayOvertime; // Pazardaki normal mesai (ilk 7.5 saat veya daha az)
+
+            // 3. İKİ METOD İÇİN AYRI AYRI HESAPLAMA
+            // --- METOD 1: 225 Saat ---
             const hourlyRate225 = monthlySalary / 225;
-            const overtimeRate225 = hourlyRate225 * 1.5;
-            const weeklyOvertimePay225 = weeklyOvertimeHours * overtimeRate225;
+            const overtimeRate225 = hourlyRate225 * 1.5; // Normal fazla mesai ücreti (%50 zamlı)
+            const sundayNormalRate225 = hourlyRate225 * 2.0; // Pazar normal ücreti (%100 zamlı)
+            const sundayOvertimeRate225 = hourlyRate225 * 2.5; // Pazardaki fazla mesai ücreti (%100+%50=%150 zamlı)
+
+            // Haftalık ücretleri topla
+            const weeklyOvertimePay225 = (weeklyOvertimeHours * overtimeRate225) +
+                                         (sundayNormal * sundayNormalRate225) +
+                                         (sundayOvertime * sundayOvertimeRate225);
+
             const monthlyTotalPay225 = monthlySalary + (weeklyOvertimePay225 * 4.33);
-            
-            // Metod 2: 195 Saat üzerinden hesapla
+
+            // --- METOD 2: 195 Saat ---
             const hourlyRate195 = monthlySalary / 195;
             const overtimeRate195 = hourlyRate195 * 1.5;
-            const weeklyOvertimePay195 = weeklyOvertimeHours * overtimeRate195;
+            const sundayNormalRate195 = hourlyRate195 * 2.0;
+            const sundayOvertimeRate195 = hourlyRate195 * 2.5;
+
+            const weeklyOvertimePay195 = (weeklyOvertimeHours * overtimeRate195) +
+                                         (sundayNormal * sundayNormalRate195) +
+                                         (sundayOvertime * sundayOvertimeRate195);
+
             const monthlyTotalPay195 = monthlySalary + (weeklyOvertimePay195 * 4.33);
-            
-            // Sonuçları göster
+
+            // 4. PAZAR EK ÜCRETİNİ HESAPLA VE GÖSTER (AYLIK)
+            // --- METOD 1: 225 Saat için Pazar Ek Ücreti ---
+            const sundayBonus225 = ((sundayNormal * sundayNormalRate225) + (sundayOvertime * sundayOvertimeRate225)) * 4.33;
+            document.getElementById('sundayBonus225').textContent = formatCurrency(sundayBonus225);
+
+            // --- METOD 2: 195 Saat için Pazar Ek Ücreti ---
+            const sundayBonus195 = ((sundayNormal * sundayNormalRate195) + (sundayOvertime * sundayOvertimeRate195)) * 4.33;
+            document.getElementById('sundayBonus195').textContent = formatCurrency(sundayBonus195);
+
+            // 5. GENEL SONUÇLARI GÖSTER
             document.getElementById('monthlyTotalPay225').textContent = formatCurrency(monthlyTotalPay225);
             document.getElementById('monthlyTotalPay195').textContent = formatCurrency(monthlyTotalPay195);
+        }
 
+        // Sadece Pazar ücretini hesaplayan fonksiyon (Bağımsız Araç)
+        function calculateSundayOnly() {
+            const monthlySalary = parseFloat(document.getElementById('sundayCalcSalary').value) || 28075.50;
+            const sundayHours = parseFloat(document.getElementById('sundayCalcHours').value) || 0;
+            
+            // Pazar saatini normal ve fazla mesai olarak ayır (7.5 saat sınır)
+            const sundayOvertime = Math.max(sundayHours - 7.5, 0);
+            const sundayNormal = sundayHours - sundayOvertime;
+            
+            // --- METOD 1: 225 Saat için Hesapla ---
+            const hourlyRate225 = monthlySalary / 225;
+            const sundayNormalRate225 = hourlyRate225 * 2.0;   // %100 zam
+            const sundayOvertimeRate225 = hourlyRate225 * 2.5; // %250 zam
+            
+            const weeklySundayPay225 = (sundayNormal * sundayNormalRate225) + (sundayOvertime * sundayOvertimeRate225);
+            const monthlySundayPay225 = weeklySundayPay225 * 4.33; // Aylık toplam
+            
+            // --- METOD 2: 195 Saat için Hesapla ---
+            const hourlyRate195 = monthlySalary / 195;
+            const sundayNormalRate195 = hourlyRate195 * 2.0;   // %100 zam
+            const sundayOvertimeRate195 = hourlyRate195 * 2.5; // %250 zam
+            
+            const weeklySundayPay195 = (sundayNormal * sundayNormalRate195) + (sundayOvertime * sundayOvertimeRate195);
+            const monthlySundayPay195 = weeklySundayPay195 * 4.33; // Aylık toplam
+            
+            // Sonuçları Göster
+            document.getElementById('sundayOnlyResult225').textContent = formatCurrency(monthlySundayPay225);
+            document.getElementById('sundayOnlyResult195').textContent = formatCurrency(monthlySundayPay195);
+            
+            // Detaylı açıklamaları güncelle (opsiyonel)
+            document.getElementById('sundayDetail225').innerHTML = `${sundayHours} saat Pazar çalışmanın <strong>aylık</strong> karşılığı.`;
+            document.getElementById('sundayDetail195').innerHTML = `${sundayHours} saat Pazar çalışmanın <strong>aylık</strong> karşılığı.`;
         }
         
         // Para birimi formatlama fonksiyonu
