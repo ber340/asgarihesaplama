@@ -5,89 +5,419 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fazla Mesai Ücreti Hesaplayıcı</title>
     <style>
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f5f7fa; color: #333; line-height: 1.6; margin: 0; padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); padding: 30px; }
-        header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #2c80b9; padding-bottom: 20px; }
-        h1, h2, h3 { color: #2c80b9; }
-        .info-box { background-color: #e8f4fc; border-left: 4px solid #2c80b9; padding: 20px; margin-bottom: 30px; border-radius: 0 5px 5px 0; }
+        :root {
+            --primary-color: #2c80b9;
+            --primary-dark: #1f5f87;
+            --secondary-color: #e91e63;
+            --secondary-dark: #c2185b;
+            --bg-light: #f5f7fa;
+            --bg-dark: #121212;
+            --card-light: #ffffff;
+            --card-dark: #1e1e1e;
+            --text-light: #333333;
+            --text-dark: #e0e0e0;
+            --border-light: #e0e0e0;
+            --border-dark: #333333;
+            --shadow-light: rgba(0,0,0,0.1);
+            --shadow-dark: rgba(0,0,0,0.3);
+        }
+        
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: background-color 0.3s, color 0.3s; }
+        
+        body { 
+            background-color: var(--bg-light); 
+            color: var(--text-light); 
+            line-height: 1.6; 
+            margin: 0; 
+            padding: 20px; 
+        }
+        
+        body.dark-theme {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+        }
+        
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            background: var(--card-light); 
+            border-radius: 10px; 
+            box-shadow: 0 5px 15px var(--shadow-light); 
+            padding: 30px; 
+            position: relative;
+        }
+        
+        .dark-theme .container {
+            background: var(--card-dark);
+            box-shadow: 0 5px 15px var(--shadow-dark);
+        }
+        
+        /* Koyu Tema Toggle */
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 20px;
+            background-color: #f0f0f0;
+            font-size: 14px;
+        }
+        
+        .dark-theme .theme-toggle {
+            background-color: #333;
+        }
+        
+        .theme-toggle input {
+            display: none;
+        }
+        
+        .toggle-slider {
+            width: 40px;
+            height: 20px;
+            background-color: #ccc;
+            border-radius: 20px;
+            position: relative;
+            transition: background-color 0.3s;
+        }
+        
+        .toggle-slider::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: white;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s;
+        }
+        
+        .theme-toggle input:checked + .toggle-slider {
+            background-color: var(--primary-color);
+        }
+        
+        .theme-toggle input:checked + .toggle-slider::after {
+            transform: translateX(20px);
+        }
+        
+        header { 
+            text-align: center; 
+            margin-bottom: 30px; 
+            border-bottom: 2px solid var(--primary-color); 
+            padding-bottom: 20px; 
+        }
+        
+        h1, h2, h3 { 
+            color: var(--primary-color); 
+        }
+        
+        .dark-theme h1, .dark-theme h2, .dark-theme h3 {
+            color: #6ab0e8;
+        }
+        
+        .info-box { 
+            background-color: #e8f4fc; 
+            border-left: 4px solid var(--primary-color); 
+            padding: 20px; 
+            margin-bottom: 30px; 
+            border-radius: 0 5px 5px 0; 
+        }
+        
+        .dark-theme .info-box {
+            background-color: #1a2b3c;
+            border-left-color: #6ab0e8;
+        }
         
         /* İki Sütunlu Ücret Gridi */
-        .wage-comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px; }
-        .wage-method { border: 2px solid #cce0f0; border-radius: 8px; padding: 20px; background-color: #fafdff; }
-        .method-title { text-align: center; font-weight: bold; margin-bottom: 15px; color: #1f5f87; border-bottom: 1px dashed #2c80b9; padding-bottom: 10px; }
-        .wage-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
-        .wage-item { background: white; padding: 12px; border-radius: 5px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #eaeaea; }
-        .wage-value { font-size: 16px; font-weight: bold; color: #2c80b9; display: block; margin-top: 5px; }
+        .wage-comparison { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 30px; 
+            margin-top: 20px; 
+        }
         
-        .calculator-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px; }
-        @media (max-width: 900px) { .wage-comparison, .calculator-grid { grid-template-columns: 1fr; } }
-        .input-section, .results-section { padding: 25px; border-radius: 8px; }
-        .input-section { background-color: #f9f9f9; border: 1px solid #e0e0e0; }
-        .results-section { background-color: #f0f8ff; border: 1px solid #cce0f0; }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: 600; color: #555; }
-        input[type="number"], select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px; }
-        .calculate-btn { background-color: #2c80b9; color: white; border: none; padding: 15px; font-size: 18px; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; transition: background-color 0.3s; margin-top: 10px; }
-        .calculate-btn:hover { background-color: #1f5f87; }
+        .wage-method { 
+            border: 2px solid #cce0f0; 
+            border-radius: 8px; 
+            padding: 20px; 
+            background-color: #fafdff; 
+        }
+        
+        .dark-theme .wage-method {
+            border-color: #2c3e50;
+            background-color: #1e2a38;
+        }
+        
+        .method-title { 
+            text-align: center; 
+            font-weight: bold; 
+            margin-bottom: 15px; 
+            color: #1f5f87; 
+            border-bottom: 1px dashed var(--primary-color); 
+            padding-bottom: 10px; 
+        }
+        
+        .dark-theme .method-title {
+            color: #6ab0e8;
+            border-bottom-color: #6ab0e8;
+        }
+        
+        .wage-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
+            gap: 12px; 
+        }
+        
+        .wage-item { 
+            background: var(--card-light); 
+            padding: 12px; 
+            border-radius: 5px; 
+            text-align: center; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
+            border: 1px solid #eaeaea; 
+        }
+        
+        .dark-theme .wage-item {
+            background: #2c3e50;
+            border-color: #3a506b;
+        }
+        
+        .wage-value { 
+            font-size: 16px; 
+            font-weight: bold; 
+            color: var(--primary-color); 
+            display: block; 
+            margin-top: 5px; 
+        }
+        
+        .calculator-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 30px; 
+            margin-top: 20px; 
+        }
+        
+        @media (max-width: 900px) { 
+            .wage-comparison, .calculator-grid { 
+                grid-template-columns: 1fr; 
+            } 
+        }
+        
+        .input-section, .results-section { 
+            padding: 25px; 
+            border-radius: 8px; 
+        }
+        
+        .input-section { 
+            background-color: #f9f9f9; 
+            border: 1px solid var(--border-light); 
+        }
+        
+        .dark-theme .input-section {
+            background-color: #1e2a38;
+            border-color: var(--border-dark);
+        }
+        
+        .results-section { 
+            background-color: #f0f8ff; 
+            border: 1px solid #cce0f0; 
+        }
+        
+        .dark-theme .results-section {
+            background-color: #1a2835;
+            border-color: #2c3e50;
+        }
+        
+        .form-group { 
+            margin-bottom: 20px; 
+        }
+        
+        label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: 600; 
+            color: #555; 
+        }
+        
+        .dark-theme label {
+            color: #b0b0b0;
+        }
+        
+        input[type="number"], select { 
+            width: 100%; 
+            padding: 12px; 
+            border: 1px solid var(--border-light); 
+            border-radius: 5px; 
+            font-size: 16px; 
+            background-color: var(--card-light);
+            color: var(--text-light);
+        }
+        
+        .dark-theme input[type="number"], 
+        .dark-theme select {
+            border-color: var(--border-dark);
+            background-color: #2c3e50;
+            color: var(--text-dark);
+        }
+        
+        .calculate-btn { 
+            background-color: var(--primary-color); 
+            color: white; 
+            border: none; 
+            padding: 15px; 
+            font-size: 18px; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            width: 100%; 
+            font-weight: bold; 
+            transition: background-color 0.3s; 
+            margin-top: 10px; 
+        }
+        
+        .calculate-btn:hover { 
+            background-color: var(--primary-dark); 
+        }
         
         /* Çift Sonuç Stili */
-        .final-result { text-align: center; padding: 25px; }
-        .result-title { font-weight: 600; color: #2c80b9; margin-bottom: 20px; font-size: 20px; }
-        .result-container { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-top: 15px; }
-        .single-result { padding: 20px; border-radius: 8px; background: white; box-shadow: 0 3px 10px rgba(0,0,0,0.08); }
-        .single-result .method-title { margin-top: 0; font-size: 16px; }
-        .single-result .result-value { font-size: 32px; font-weight: bold; color: #d35400; margin: 15px 0; }
-        .explanation { font-size: 14px; color: #666; margin-top: 5px; }
+        .final-result { 
+            text-align: center; 
+            padding: 25px; 
+        }
+        
+        .result-title { 
+            font-weight: 600; 
+            color: var(--primary-color); 
+            margin-bottom: 20px; 
+            font-size: 20px; 
+        }
+        
+        .result-container { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 25px; 
+            margin-top: 15px; 
+        }
+        
+        .single-result { 
+            padding: 20px; 
+            border-radius: 8px; 
+            background: var(--card-light); 
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08); 
+        }
+        
+        .dark-theme .single-result {
+            background: #2c3e50;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        
+        .single-result .method-title { 
+            margin-top: 0; 
+            font-size: 16px; 
+        }
+        
+        .single-result .result-value { 
+            font-size: 32px; 
+            font-weight: bold; 
+            color: #d35400; 
+            margin: 15px 0; 
+        }
+        
+        .daily-result-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #27ae60;
+            margin-top: 10px;
+        }
+        
+        .explanation { 
+            font-size: 14px; 
+            color: #666; 
+            margin-top: 5px; 
+        }
+        
+        .dark-theme .explanation {
+            color: #aaa;
+        }
         
         /* Pazar Özel Stilleri (TEK SONUÇ) */
-        .sunday-section { background-color: #fff0f5; border-left-color: #e91e63; }
-        .sunday-btn { background-color: #e91e63; }
-        .sunday-btn:hover { background-color: #c2185b; }
+        .sunday-section { 
+            background-color: #fff0f5; 
+            border-left-color: var(--secondary-color); 
+        }
         
-        .legal-info { margin-top: 30px; padding: 20px; background-color: #fff8e1; border-radius: 8px; font-size: 14px; border: 1px solid #ffecb3; }
-        footer { text-align: center; margin-top: 30px; color: #777; font-size: 14px; border-top: 1px solid #eee; padding-top: 20px; }
-        .citation { display: none; }
-        .note { font-size: 13px; color: #888; text-align: center; margin-top: 15px; font-style: italic; }
+        .dark-theme .sunday-section {
+            background-color: #2d1a24;
+            border-left-color: #e91e63;
+        }
+        
+        .sunday-btn { 
+            background-color: var(--secondary-color); 
+        }
+        
+        .sunday-btn:hover { 
+            background-color: var(--secondary-dark); 
+        }
+        
+        .legal-info { 
+            margin-top: 30px; 
+            padding: 20px; 
+            background-color: #fff8e1; 
+            border-radius: 8px; 
+            font-size: 14px; 
+            border: 1px solid #ffecb3; 
+        }
+        
+        .dark-theme .legal-info {
+            background-color: #2d261a;
+            border-color: #3d3629;
+        }
+        
+        footer { 
+            text-align: center; 
+            margin-top: 30px; 
+            color: #777; 
+            font-size: 14px; 
+            border-top: 1px solid #eee; 
+            padding-top: 20px; 
+        }
+        
+        .dark-theme footer {
+            color: #aaa;
+            border-top-color: #333;
+        }
+        
+        .citation { 
+            display: none; 
+        }
+        
+        .note { 
+            font-size: 13px; 
+            color: #888; 
+            text-align: center; 
+            margin-top: 15px; 
+            font-style: italic; 
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Koyu Tema Toggle -->
+        <div class="theme-toggle" onclick="toggleTheme()">
+            <span>Koyu Tema</span>
+            <label>
+                <input type="checkbox" id="themeToggle">
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+        
         <header>
             <h1>Fazla Mesai Ücreti Hesaplayıcı</h1>
             <p>2026 Yılı Asgari Ücret ve Türk İş Hukuku'na Göre Fazla Mesai Hesaplama</p>
         </header>
-
-        <!-- GÜNCELLENMİŞ BİLGİLENDİRME (Çift Hesaplama) -->
-        <div class="info-box">
-            <h3>📊 2026 Yılı Asgari Ücret - İki Farklı Hesaplama Metodu</h3>
-            <p>2026 yılı net asgari ücreti <strong>28.075,50 TL</strong>'dir. Aşağıda, yaygın olarak kullanılan iki farklı aylık çalışma süresine göre hesaplanmış saatlik ücretleri karşılaştırabilirsiniz.</p>
-            
-            <div class="wage-comparison">
-                <!-- Metod 1: 30 Gün / 225 Saat -->
-                <div class="wage-method">
-                    <div class="method-title">📅 Metod 1: 30 Gün / 225 Saat</div>
-                    <div class="wage-grid">
-                        <div class="wage-item"><span>Saatlik Ücret</span><span class="wage-value" id="hourlyRate225">— ₺</span></div>
-                        <div class="wage-item"><span>Yarım Saatlik</span><span class="wage-value" id="halfHourlyRate225">— ₺</span></div>
-                        <div class="wage-item"><span>Fazla Mesai Saati</span><span class="wage-value" id="overtimeRate225">— ₺</span></div>
-                        <div class="wage-item"><span>Yarım Saat Fazla Mesai</span><span class="wage-value" id="halfOvertimeRate225">— ₺</span></div>
-                    </div>
-                </div>
-                
-                <!-- Metod 2: 26 Gün / 195 Saat -->
-                <div class="wage-method">
-                    <div class="method-title">📊 Metod 2: 26 Gün / 195 Saat</div>
-                    <div class="wage-grid">
-                        <div class="wage-item"><span>Saatlik Ücret</span><span class="wage-value" id="hourlyRate195">— ₺</span></div>
-                        <div class="wage-item"><span>Yarım Saatlik</span><span class="wage-value" id="halfHourlyRate195">— ₺</span></div>
-                        <div class="wage-item"><span>Fazla Mesai Saati</span><span class="wage-value" id="overtimeRate195">— ₺</span></div>
-                        <div class="wage-item"><span>Yarım Saat Fazla Mesai</span><span class="wage-value" id="halfOvertimeRate195">— ₺</span></div>
-                    </div>
-                </div>
-            </div>
-            <p class="note">"HESAPLA" butonuna bastığınızda, her iki metoda göre de aylık toplam ücretiniz hesaplanacaktır.</p>
-        </div>
 
         <div class="calculator-grid">
             <!-- Girdi Bölümü (AYLIK MAAŞ GİRİŞİ ÇIKARILDI) -->
@@ -112,7 +442,7 @@
                     <input type="number" id="dailyHours" min="1" max="15" step="0.5" value="7.5">
                     <p class="explanation">Haftalık 45 saati aşan kısım otomatik fazla mesai sayılacaktır.</p>
                 </div>
-                <!-- AYLIK MAAŞ GİRİŞİ BURADA KALDIRILDI -->
+                
                 <button class="calculate-btn" onclick="calculateOvertime()">HESAPLA</button>
             </div>
             
@@ -161,18 +491,51 @@
                 <div class="single-result">
                     <div class="method-title">30 Gün / 225 Saat Metoduna Göre</div>
                     <div class="result-value" id="sundayOnlyResult225">— ₺</div>
-                    <p class="explanation" id="sundayDetail225">Pazar çalışmanızın aylık ek getirisi.</p>
+                    <div class="daily-result-value" id="sundayDailyResult225">— ₺ (günlük)</div>
+                    <p class="explanation" id="sundayDetail225">7 saat Pazar çalışmanın aylık karşılığı.</p>
                 </div>
                 <div class="single-result">
                     <div class="method-title">26 Gün / 195 Saat Metoduna Göre</div>
                     <div class="result-value" id="sundayOnlyResult195">— ₺</div>
-                    <p class="explanation" id="sundayDetail195">Pazar çalışmanızın aylık ek getirisi.</p>
+                    <div class="daily-result-value" id="sundayDailyResult195">— ₺ (günlük)</div>
+                    <p class="explanation" id="sundayDetail195">7 saat Pazar çalışmanın aylık karşılığı.</p>
                 </div>
             </div>
-            <p class="note">Not: Hesaplama, Pazar gününün ilk 7.5 saati için %100, 7.5 saati aşan kısım için ise %150 (toplam %250) zam üzerinden yapılır.</p>
+            <p class="note">Not: İlk 7.5 saat %100, fazlası %250 zamlıdır.</p>
         </div>
         
-        <!-- Yasal Bilgilendirme -->
+        <!-- EN ALTA TAŞINAN BİLGİLENDİRME (Çift Hesaplama) -->
+        <div class="info-box">
+            <h3>📊 2026 Yılı Asgari Ücret - İki Farklı Hesaplama Metodu</h3>
+            <p>2026 yılı net asgari ücreti <strong>28.075,50 TL</strong>'dir. Aşağıda, yaygın olarak kullanılan iki farklı aylık çalışma süresine göre hesaplanmış saatlik ücretleri karşılaştırabilirsiniz.</p>
+            
+            <div class="wage-comparison">
+                <!-- Metod 1: 30 Gün / 225 Saat -->
+                <div class="wage-method">
+                    <div class="method-title">📅 Metod 1: 30 Gün / 225 Saat</div>
+                    <div class="wage-grid">
+                        <div class="wage-item"><span>Saatlik Ücret</span><span class="wage-value" id="hourlyRate225">— ₺</span></div>
+                        <div class="wage-item"><span>Yarım Saatlik</span><span class="wage-value" id="halfHourlyRate225">— ₺</span></div>
+                        <div class="wage-item"><span>Fazla Mesai Saati</span><span class="wage-value" id="overtimeRate225">— ₺</span></div>
+                        <div class="wage-item"><span>Yarım Saat Fazla Mesai</span><span class="wage-value" id="halfOvertimeRate225">— ₺</span></div>
+                    </div>
+                </div>
+                
+                <!-- Metod 2: 26 Gün / 195 Saat -->
+                <div class="wage-method">
+                    <div class="method-title">📊 Metod 2: 26 Gün / 195 Saat</div>
+                    <div class="wage-grid">
+                        <div class="wage-item"><span>Saatlik Ücret</span><span class="wage-value" id="hourlyRate195">— ₺</span></div>
+                        <div class="wage-item"><span>Yarım Saatlik</span><span class="wage-value" id="halfHourlyRate195">— ₺</span></div>
+                        <div class="wage-item"><span>Fazla Mesai Saati</span><span class="wage-value" id="overtimeRate195">— ₺</span></div>
+                        <div class="wage-item"><span>Yarım Saat Fazla Mesai</span><span class="wage-value" id="halfOvertimeRate195">— ₺</span></div>
+                    </div>
+                </div>
+            </div>
+            <p class="note">"HESAPLA" butonuna bastığınızda, her iki metoda göre de aylık toplam ücretiniz hesaplanacaktır.</p>
+        </div>
+        
+        <!-- SADELEŞTİRİLMİŞ YASAL BİLGİLENDİRME -->
         <div class="legal-info">
             <h3>⚖️ Yasal Bilgilendirme</h3>
             <p><strong>Yasal Dayanak:</strong> 4857 sayılı İş Kanunu'nun 41. maddesine göre, haftalık çalışma süresi genel olarak 45 saattir. Bu süreyi aşan çalışmalar fazla mesaidir ve her bir saati için normal ücretin %50 fazlası ödenmelidir.</p>
@@ -181,7 +544,8 @@
             <ul>
                 <li>Fazla mesai ve hafta tatili çalışması için çalışanın <strong>yazılı onayı</strong> genellikle gereklidir.</li>
                 <li>Yıllık fazla mesai sınırı <strong>270 saat</strong>tir.</li>
-                <li>Bu araç bilgilendirme amaçlıdır. Kesin ve resmi hesaplamalar için muhasebe biriminize veya bir iş hukuku uzmanına danışınız.</em></p>
+                <li>Bu araç bilgilendirme amaçlıdır. Kesin ve resmi hesaplamalar için muhasebe biriminize veya bir iş hukuku uzmanına danışınız.</li>
+            </ul>
         </div>
         
         <footer>
@@ -193,8 +557,25 @@
         // SABİT DEĞER: 2026 Net Asgari Ücret
         const NET_ASGARI_MAAS = 28075.50;
 
-        // Sayfa yüklendiğinde asgari ücrete göre ilk ücretleri hesapla ve göster
+        // Koyu tema fonksiyonu
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            const toggleCheckbox = document.getElementById('themeToggle');
+            toggleCheckbox.checked = !toggleCheckbox.checked;
+            
+            // Tema tercihini localStorage'da sakla
+            const isDarkMode = document.body.classList.contains('dark-theme');
+            localStorage.setItem('darkMode', isDarkMode);
+        }
+
+        // Sayfa yüklendiğinde tema tercihini kontrol et
         document.addEventListener('DOMContentLoaded', function() {
+            const darkMode = localStorage.getItem('darkMode') === 'true';
+            if (darkMode) {
+                document.body.classList.add('dark-theme');
+                document.getElementById('themeToggle').checked = true;
+            }
+            
             calculateInitialRates();
         });
 
@@ -273,13 +654,21 @@
             const weeklySundayPay195 = (sundayNormal * sundayNormalRate195) + (sundayOvertime * sundayOvertimeRate195);
             const monthlySundayPay195 = weeklySundayPay195 * 4.33; // Aylık toplam
             
+            // Günlük ücretleri hesapla
+            const dailySundayPay225 = weeklySundayPay225;
+            const dailySundayPay195 = weeklySundayPay195;
+            
             // Sonuçları Göster (İKİ METOD)
             document.getElementById('sundayOnlyResult225').textContent = formatCurrency(monthlySundayPay225);
             document.getElementById('sundayOnlyResult195').textContent = formatCurrency(monthlySundayPay195);
             
+            // Günlük ücretleri göster
+            document.getElementById('sundayDailyResult225').textContent = formatCurrency(dailySundayPay225) + " (günlük)";
+            document.getElementById('sundayDailyResult195').textContent = formatCurrency(dailySundayPay195) + " (günlük)";
+            
             // Detaylı açıklamaları güncelle
-            document.getElementById('sundayDetail225').innerHTML = `${sundayHours} saat Pazar çalışmanın <strong>aylık</strong> karşılığı.`;
-            document.getElementById('sundayDetail195').innerHTML = `${sundayHours} saat Pazar çalışmanın <strong>aylık</strong> karşılığı.`;
+            document.getElementById('sundayDetail225').innerHTML = `${sundayHours} saat Pazar çalışmanın <strong>aylık</strong> karşılığı.<br>Aylık 8.700 TL ve günlük karşılığı ${formatCurrency(dailySundayPay225)}`;
+            document.getElementById('sundayDetail195').innerHTML = `${sundayHours} saat Pazar çalışmanın <strong>aylık</strong> karşılığı.<br>Aylık 8.700 TL ve günlük karşılığı ${formatCurrency(dailySundayPay195)}`;
         }
         
         // Para birimi formatlama fonksiyonu
