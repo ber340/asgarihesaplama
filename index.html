@@ -138,6 +138,26 @@
                 </div>
             </div>
         </div>
+
+                <!-- PAZAR ÜCRETİ DETAY BÖLÜMÜ -->
+        <div class="info-box" style="margin-top: 20px; background-color: #f0f8ff;">
+            <h3>📈 Pazar Günü Çalışmanın Getirdiği Ek Ücret (Aylık)</h3>
+            <p>Bu bölümde, <strong>yalnızca</strong> yukarıda girdiğiniz pazar çalışma saati için alacağınız ek ücret gösterilir. Bu tutar, yukarıda hesaplanan "Aylık Toplam Ücret"in içine dahil edilmiştir.</p>
+            
+            <div class="result-container" style="margin-top:15px;">
+                <div class="single-result">
+                    <div class="method-title">30 Gün / 225 Saat Metoduna Göre</div>
+                    <div class="result-value" id="sundayBonus225">— ₺</div>
+                    <p class="explanation">(Pazar ücreti: Normal saat x %100 + Fazla mesai x %250)</p>
+                </div>
+                
+                <div class="single-result">
+                    <div class="method-title">26 Gün / 195 Saat Metoduna Göre</div>
+                    <div class="result-value" id="sundayBonus195">— ₺</div>
+                    <p class="explanation">(Pazar ücreti: Normal saat x %100 + Fazla mesai x %250)</p>
+                </div>
+            </div>
+        </div>
         
         <!-- Yasal Bilgilendirme -->
         <div class="legal-info">
@@ -214,6 +234,19 @@
             // Sonuçları göster
             document.getElementById('monthlyTotalPay225').textContent = formatCurrency(monthlyTotalPay225);
             document.getElementById('monthlyTotalPay195').textContent = formatCurrency(monthlyTotalPay195);
+
+                // 4. PAZAR EK ÜCRETİNİ HESAPLA VE GÖSTER (AYLIK)
+    // --- METOD 1: 225 Saat için Pazar Ek Ücreti ---
+    const sundayBonus225 = ((sundayNormal * sundayNormalRate225) + (sundayOvertime * sundayOvertimeRate225)) * 4.33;
+    document.getElementById('sundayBonus225').textContent = formatCurrency(sundayBonus225);
+
+    // --- METOD 2: 195 Saat için Pazar Ek Ücreti ---
+    const sundayBonus195 = ((sundayNormal * sundayNormalRate195) + (sundayOvertime * sundayOvertimeRate195)) * 4.33;
+    document.getElementById('sundayBonus195').textContent = formatCurrency(sundayBonus195);
+
+    // 5. GENEL SONUÇLARI GÖSTER
+    document.getElementById('monthlyTotalPay225').textContent = formatCurrency(monthlyTotalPay225);
+    document.getElementById('monthlyTotalPay195').textContent = formatCurrency(monthlyTotalPay195);
         }
         
         // Para birimi formatlama fonksiyonu
