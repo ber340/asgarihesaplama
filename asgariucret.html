@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fazla Mesai Ücreti Hesaplayıcı</title>
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f5f7fa; color: #333; line-height: 1.6; margin: 0; padding: 20px; }
+        .container { max-width: 1100px; margin: 0 auto; background: white; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); padding: 30px; }
+        header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #2c80b9; padding-bottom: 20px; }
+        h1, h2 { color: #2c80b9; }
+        .info-box { background-color: #e8f4fc; border-left: 4px solid #2c80b9; padding: 20px; margin-bottom: 30px; border-radius: 0 5px 5px 0; }
+        .wage-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-top: 15px; }
+        .wage-item { background: white; padding: 15px; border-radius: 5px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .wage-value { font-size: 18px; font-weight: bold; color: #2c80b9; display: block; margin-top: 5px; }
+        .calculator-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px; }
+        @media (max-width: 768px) { .calculator-grid { grid-template-columns: 1fr; } }
+        .input-section, .results-section { padding: 25px; border-radius: 8px; }
+        .input-section { background-color: #f9f9f9; border: 1px solid #e0e0e0; }
+        .results-section { background-color: #f0f8ff; border: 1px solid #cce0f0; display: flex; align-items: center; justify-content: center; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #555; }
+        input[type="number"], select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px; }
+        .calculate-btn { background-color: #2c80b9; color: white; border: none; padding: 15px; font-size: 18px; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; transition: background-color 0.3s; margin-top: 10px; }
+        .calculate-btn:hover { background-color: #1f5f87; }
+        .final-result { text-align: center; padding: 30px; }
+        .result-title { font-weight: 600; color: #2c80b9; margin-bottom: 10px; font-size: 18px; }
+        .result-value { font-size: 36px; font-weight: bold; color: #d35400; margin: 15px 0; }
+        .explanation { font-size: 14px; color: #666; margin-top: 5px; }
+        .legal-info { margin-top: 30px; padding: 20px; background-color: #fff8e1; border-radius: 8px; font-size: 14px; border: 1px solid #ffecb3; }
+        footer { text-align: center; margin-top: 30px; color: #777; font-size: 14px; border-top: 1px solid #eee; padding-top: 20px; }
+        .citation { display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Fazla Mesai Ücreti Hesaplayıcı</h1>
+            <p>2026 Yılı Asgari Ücret ve Türk İş Hukuku'na Göre Fazla Mesai Hesaplama</p>
+        </header>
+
+        <!-- GÜNCELLENMİŞ BİLGİLENDİRME (Yarım Saatlik Ücretler Eklendi) -->
+        <div class="info-box">
+            <h3>📊 2026 Yılı Asgari Ücret Bilgileri</h3>
+            <p>2026 yılı net asgari ücreti <strong>28.075,50 TL</strong>'dir. Aylık çalışma süresi 195 saat (7.5 saat/gün x 26 gün) üzerinden hesaplanır.</p>
+            <div class="wage-grid">
+                <div class="wage-item">
+                    <span>Aylık Net Ücret</span>
+                    <span class="wage-value">28.075,50 ₺</span>
+                </div>
+                <div class="wage-item">
+                    <span>Aylık Çalışma Süresi</span>
+                    <span class="wage-value">195 saat</span>
+                    <small>(7.5 saat x 26 gün)</small>
+                </div>
+                <div class="wage-item">
+                    <span>Saatlik Net Ücret</span>
+                    <span class="wage-value">~143,98 ₺</span>
+                </div>
+                <div class="wage-item">
+                    <span>Yarım Saatlik Ücret</span>
+                    <span class="wage-value">~71,99 ₺</span>
+                    <small>(Saatlik / 2)</small>
+                </div>
+                <div class="wage-item">
+                    <span>Saatlik Fazla Mesai</span>
+                    <span class="wage-value">~215,97 ₺</span>
+                    <small>(Saatlik x 1.5)</small>
+                </div>
+                <div class="wage-item">
+                    <span>Yarım Saatlik Fazla Mesai</span>
+                    <span class="wage-value">~107,99 ₺</span>
+                    <small>(Fazla Mesai / 2)</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="calculator-grid">
+            <!-- Girdi Bölümü -->
+            <div class="input-section">
+                <h2>Fazla Mesai Hesaplama</h2>
+                <p>Lütfen aşağıdaki bilgileri doldurup "HESAPLA" butonuna basınız.</p>
+                
+                <div class="form-group">
+                    <label for="monthlySalary">Aylık Net Maaşınız (TL)</label>
+                    <input type="number" id="monthlySalary" min="0" step="100" value="28075.50">
+                    <p class="explanation">2026 net asgari ücret: 28.075,50 TL</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="workDays">Haftada Kaç Gün Çalışıyorsunuz?</label>
+                    <select id="workDays">
+                        <option value="5">5 Gün</option>
+                        <option value="6" selected>6 Gün</option>
+                        <option value="7">7 Gün</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="dailyHours"><strong>Günlük Çalışma Saatiniz</strong></label>
+                    <input type="number" id="dailyHours" min="1" max="15" step="0.5" value="7.5">
+                    <p class="explanation">Haftalık 45 saati aşan kısım otomatik fazla mesai sayılacaktır.</p>
+                </div>
+                
+                <button class="calculate-btn" onclick="calculateOvertime()">HESAPLA</button>
+            </div>
+            
+            <!-- Sonuçlar Bölümü -->
+            <div class="results-section">
+                <div class="final-result">
+                    <div class="result-title">Aylık Toplam Almanız Gereken Ücret</div>
+                    <div class="result-value" id="monthlyTotalPay">— ₺</div>
+                    <p class="explanation">(Aylık normal maaş + fazla mesai ücreti)</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- YENİ YASAL BİLGİLENDİRME (Kısaltılmış) -->
+        <div class="legal-info">
+            <h3>⚖️ Yasal Bilgilendirme</h3>
+            <p><strong>Yasal Dayanak:</strong> 4857 sayılı İş Kanunu'nun 41. maddesine göre, haftalık çalışma süresi genel olarak 45 saattir. Bu süreyi aşan çalışmalar fazla mesaidir ve her bir saati için normal ücretin %50 fazlası ödenmelidir.</p>
+            <p><strong>Önemli Hususlar:</strong></p>
+            <ul>
+                <li>Fazla mesai için çalışanın <strong>yazılı onayı</strong> genellikle gereklidir.</li>
+                <li>Yıllık fazla mesai sınırı <strong>270 saat</strong>tir.</li>
+            </ul>
+            <p><em>Bu araç bilgilendirme amaçlıdır. Kesin ve resmi hesaplamalar için muhasebe biriminize veya bir iş hukuku uzmanına danışınız.</em></p>
+        </div>
+        
+        <footer>
+            <p>© 2026 - Türk İş Hukuku'na Göre Fazla Mesai Ücreti Hesaplayıcı</p>
+        </footer>
+    </div>
+
+    <script>
+        function calculateOvertime() {
+            const monthlySalary = parseFloat(document.getElementById('monthlySalary').value);
+            const workDays = parseInt(document.getElementById('workDays').value);
+            const dailyHours = parseFloat(document.getElementById('dailyHours').value);
+            
+            // Haftalık toplam ve fazla mesai saatini hesapla
+            const weeklyTotalHours = dailyHours * workDays;
+            let weeklyOvertimeHours = weeklyTotalHours - 45;
+            if (weeklyOvertimeHours < 0) weeklyOvertimeHours = 0;
+            
+            // Saatlik ücreti aylık 195 saate göre hesapla
+            const hourlyRate = monthlySalary / 195;
+            const overtimeRate = hourlyRate * 1.5;
+            
+            // Haftalık fazla mesai ücreti ve aylık toplam
+            const weeklyOvertimePay = weeklyOvertimeHours * overtimeRate;
+            const monthlyTotalPay = monthlySalary + (weeklyOvertimePay * 4.33);
+            
+            // Sonucu göster
+            document.getElementById('monthlyTotalPay').textContent = formatCurrency(monthlyTotalPay);
+        }
+        
+        function formatCurrency(amount) {
+            return amount.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₺';
+        }
+    </script>
+</body>
+</html>
