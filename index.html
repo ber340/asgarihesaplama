@@ -6,102 +6,40 @@
     <title>Fazla Mesai Ücreti Hesaplayıcı</title>
     <style>
         :root {
-            --primary-color: #2c80b9;
-            --primary-dark: #1f5f87;
+            --primary-color: #6ab0e8;
+            --primary-dark: #4a8bc5;
             --secondary-color: #e91e63;
             --secondary-dark: #c2185b;
-            --bg-light: #f5f7fa;
             --bg-dark: #121212;
-            --card-light: #ffffff;
             --card-dark: #1e1e1e;
-            --text-light: #333333;
             --text-dark: #e0e0e0;
-            --border-light: #e0e0e0;
             --border-dark: #333333;
-            --shadow-light: rgba(0,0,0,0.1);
             --shadow-dark: rgba(0,0,0,0.3);
+            --accent-color: #27ae60;
+            --warning-color: #f39c12;
         }
         
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: background-color 0.3s, color 0.3s; }
+        * { 
+            box-sizing: border-box; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            transition: background-color 0.3s, color 0.3s; 
+        }
         
         body { 
-            background-color: var(--bg-light); 
-            color: var(--text-light); 
+            background-color: var(--bg-dark); 
+            color: var(--text-dark); 
             line-height: 1.6; 
             margin: 0; 
             padding: 20px; 
         }
         
-        body.dark-theme {
-            background-color: var(--bg-dark);
-            color: var(--text-dark);
-        }
-        
         .container { 
             max-width: 1200px; 
             margin: 0 auto; 
-            background: var(--card-light); 
+            background: var(--card-dark); 
             border-radius: 10px; 
-            box-shadow: 0 5px 15px var(--shadow-light); 
+            box-shadow: 0 5px 15px var(--shadow-dark); 
             padding: 30px; 
-            position: relative;
-        }
-        
-        .dark-theme .container {
-            background: var(--card-dark);
-            box-shadow: 0 5px 15px var(--shadow-dark);
-        }
-        
-        /* Koyu Tema Toggle */
-        .theme-toggle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            padding: 8px 12px;
-            border-radius: 20px;
-            background-color: #f0f0f0;
-            font-size: 14px;
-        }
-        
-        .dark-theme .theme-toggle {
-            background-color: #333;
-        }
-        
-        .theme-toggle input {
-            display: none;
-        }
-        
-        .toggle-slider {
-            width: 40px;
-            height: 20px;
-            background-color: #ccc;
-            border-radius: 20px;
-            position: relative;
-            transition: background-color 0.3s;
-        }
-        
-        .toggle-slider::after {
-            content: '';
-            position: absolute;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background-color: white;
-            top: 2px;
-            left: 2px;
-            transition: transform 0.3s;
-        }
-        
-        .theme-toggle input:checked + .toggle-slider {
-            background-color: var(--primary-color);
-        }
-        
-        .theme-toggle input:checked + .toggle-slider::after {
-            transform: translateX(20px);
         }
         
         header { 
@@ -115,21 +53,12 @@
             color: var(--primary-color); 
         }
         
-        .dark-theme h1, .dark-theme h2, .dark-theme h3 {
-            color: #6ab0e8;
-        }
-        
         .info-box { 
-            background-color: #e8f4fc; 
+            background-color: #1a2b3c; 
             border-left: 4px solid var(--primary-color); 
             padding: 20px; 
             margin-bottom: 30px; 
             border-radius: 0 5px 5px 0; 
-        }
-        
-        .dark-theme .info-box {
-            background-color: #1a2b3c;
-            border-left-color: #6ab0e8;
         }
         
         /* İki Sütunlu Ücret Gridi */
@@ -141,49 +70,42 @@
         }
         
         .wage-method { 
-            border: 2px solid #cce0f0; 
+            border: 2px solid #2c3e50; 
             border-radius: 8px; 
             padding: 20px; 
-            background-color: #fafdff; 
-        }
-        
-        .dark-theme .wage-method {
-            border-color: #2c3e50;
-            background-color: #1e2a38;
+            background-color: #1e2a38; 
         }
         
         .method-title { 
             text-align: center; 
             font-weight: bold; 
             margin-bottom: 15px; 
-            color: #1f5f87; 
+            color: var(--primary-color); 
             border-bottom: 1px dashed var(--primary-color); 
             padding-bottom: 10px; 
-        }
-        
-        .dark-theme .method-title {
-            color: #6ab0e8;
-            border-bottom-color: #6ab0e8;
         }
         
         .wage-grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
             gap: 12px; 
+            margin-top: 15px;
         }
         
         .wage-item { 
-            background: var(--card-light); 
+            background: #2c3e50; 
             padding: 12px; 
             border-radius: 5px; 
             text-align: center; 
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
-            border: 1px solid #eaeaea; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2); 
+            border: 1px solid #3a506b; 
         }
         
-        .dark-theme .wage-item {
-            background: #2c3e50;
-            border-color: #3a506b;
+        .wage-label {
+            font-size: 14px;
+            color: #b0b0b0;
+            margin-bottom: 5px;
+            display: block;
         }
         
         .wage-value { 
@@ -191,7 +113,14 @@
             font-weight: bold; 
             color: var(--primary-color); 
             display: block; 
-            margin-top: 5px; 
+        }
+        
+        .daily-wage-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--accent-color);
+            display: block;
+            margin-top: 3px;
         }
         
         .calculator-grid { 
@@ -213,23 +142,13 @@
         }
         
         .input-section { 
-            background-color: #f9f9f9; 
-            border: 1px solid var(--border-light); 
-        }
-        
-        .dark-theme .input-section {
-            background-color: #1e2a38;
-            border-color: var(--border-dark);
+            background-color: #1e2a38; 
+            border: 1px solid var(--border-dark); 
         }
         
         .results-section { 
-            background-color: #f0f8ff; 
-            border: 1px solid #cce0f0; 
-        }
-        
-        .dark-theme .results-section {
-            background-color: #1a2835;
-            border-color: #2c3e50;
+            background-color: #1a2835; 
+            border: 1px solid #2c3e50; 
         }
         
         .form-group { 
@@ -240,26 +159,15 @@
             display: block; 
             margin-bottom: 8px; 
             font-weight: 600; 
-            color: #555; 
-        }
-        
-        .dark-theme label {
-            color: #b0b0b0;
+            color: #b0b0b0; 
         }
         
         input[type="number"], select { 
             width: 100%; 
             padding: 12px; 
-            border: 1px solid var(--border-light); 
+            border: 1px solid var(--border-dark); 
             border-radius: 5px; 
             font-size: 16px; 
-            background-color: var(--card-light);
-            color: var(--text-light);
-        }
-        
-        .dark-theme input[type="number"], 
-        .dark-theme select {
-            border-color: var(--border-dark);
             background-color: #2c3e50;
             color: var(--text-dark);
         }
@@ -305,13 +213,8 @@
         .single-result { 
             padding: 20px; 
             border-radius: 8px; 
-            background: var(--card-light); 
-            box-shadow: 0 3px 10px rgba(0,0,0,0.08); 
-        }
-        
-        .dark-theme .single-result {
-            background: #2c3e50;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            background: #2c3e50; 
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2); 
         }
         
         .single-result .method-title { 
@@ -322,36 +225,27 @@
         .single-result .result-value { 
             font-size: 32px; 
             font-weight: bold; 
-            color: #d35400; 
+            color: #ff9800; 
             margin: 15px 0; 
         }
         
         .daily-result-value {
             font-size: 20px;
             font-weight: bold;
-            color: #27ae60;
+            color: var(--accent-color);
             margin-top: 10px;
         }
         
         .explanation { 
             font-size: 14px; 
-            color: #666; 
+            color: #aaa; 
             margin-top: 5px; 
         }
         
-        .dark-theme .explanation {
-            color: #aaa;
-        }
-        
-        /* Pazar Özel Stilleri (TEK SONUÇ) */
+        /* Pazar Özel Stilleri */
         .sunday-section { 
-            background-color: #fff0f5; 
+            background-color: #2d1a24; 
             border-left-color: var(--secondary-color); 
-        }
-        
-        .dark-theme .sunday-section {
-            background-color: #2d1a24;
-            border-left-color: #e91e63;
         }
         
         .sunday-btn { 
@@ -362,36 +256,37 @@
             background-color: var(--secondary-dark); 
         }
         
+        /* Part-Time Bölümü */
+        .parttime-section { 
+            background-color: #1a2d24; 
+            border-left-color: var(--accent-color); 
+            margin-top: 30px;
+        }
+        
+        .parttime-btn { 
+            background-color: var(--accent-color); 
+        }
+        
+        .parttime-btn:hover { 
+            background-color: #219653; 
+        }
+        
         .legal-info { 
             margin-top: 30px; 
             padding: 20px; 
-            background-color: #fff8e1; 
+            background-color: #2d261a; 
             border-radius: 8px; 
             font-size: 14px; 
-            border: 1px solid #ffecb3; 
-        }
-        
-        .dark-theme .legal-info {
-            background-color: #2d261a;
-            border-color: #3d3629;
+            border: 1px solid #3d3629; 
         }
         
         footer { 
             text-align: center; 
             margin-top: 30px; 
-            color: #777; 
+            color: #aaa; 
             font-size: 14px; 
-            border-top: 1px solid #eee; 
+            border-top: 1px solid #333; 
             padding-top: 20px; 
-        }
-        
-        .dark-theme footer {
-            color: #aaa;
-            border-top-color: #333;
-        }
-        
-        .citation { 
-            display: none; 
         }
         
         .note { 
@@ -401,26 +296,23 @@
             margin-top: 15px; 
             font-style: italic; 
         }
+        
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--primary-color), transparent);
+            margin: 30px 0;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Koyu Tema Toggle -->
-        <div class="theme-toggle" onclick="toggleTheme()">
-            <span>Koyu Tema</span>
-            <label>
-                <input type="checkbox" id="themeToggle">
-                <span class="toggle-slider"></span>
-            </label>
-        </div>
-        
         <header>
             <h1>Fazla Mesai Ücreti Hesaplayıcı</h1>
             <p>2026 Yılı Asgari Ücret ve Türk İş Hukuku'na Göre Fazla Mesai Hesaplama</p>
         </header>
 
         <div class="calculator-grid">
-            <!-- Girdi Bölümü (AYLIK MAAŞ GİRİŞİ ÇIKARILDI) -->
+            <!-- Girdi Bölümü -->
             <div class="input-section">
                 <h2>Fazla Mesai Hesaplama</h2>
                 <p>Lütfen çalışma programınızı aşağıdaki gibi doldurup "HESAPLA" butonuna basınız.<br><strong>Temel Maaş: 28.075,50 TL (2026 Net Asgari Ücret)</strong></p>
@@ -471,7 +363,7 @@
             </div>
         </div>
         
-        <!-- BAĞIMSIZ PAZAR GÜNÜ HESAPLAYICISI (SABİT MAAŞ) -->
+        <!-- BAĞIMSIZ PAZAR GÜNÜ HESAPLAYICISI -->
         <div class="info-box sunday-section">
             <h3>🔍 Sadece Pazar Günü Çalışma Hesaplayıcısı</h3>
             <p>Bu araç ile <strong>sadece Pazar günü çalışmanızın</strong> aylık maaşınıza (28.075,50 TL) ne kadar ek getiri sağlayacağını hesaplayabilirsiniz. Lütfen Pazar günü çalışmak istediğiniz saati girin.</p>
@@ -492,32 +384,85 @@
                     <div class="method-title">30 Gün / 225 Saat Metoduna Göre</div>
                     <div class="result-value" id="sundayOnlyResult225">— ₺</div>
                     <div class="daily-result-value" id="sundayDailyResult225">— ₺ (günlük)</div>
-                    <p class="explanation" id="sundayDetail225">7 saat Pazar çalışmanın aylık karşılığı.</p>
+                    <p class="explanation" id="sundayDetail225">Pazar çalışmanın aylık ve günlük karşılığı.</p>
                 </div>
                 <div class="single-result">
                     <div class="method-title">26 Gün / 195 Saat Metoduna Göre</div>
                     <div class="result-value" id="sundayOnlyResult195">— ₺</div>
                     <div class="daily-result-value" id="sundayDailyResult195">— ₺ (günlük)</div>
-                    <p class="explanation" id="sundayDetail195">7 saat Pazar çalışmanın aylık karşılığı.</p>
+                    <p class="explanation" id="sundayDetail195">Pazar çalışmanın aylık ve günlük karşılığı.</p>
                 </div>
             </div>
             <p class="note">Not: İlk 7.5 saat %100, fazlası %250 zamlıdır.</p>
         </div>
         
-        <!-- EN ALTA TAŞINAN BİLGİLENDİRME (Çift Hesaplama) -->
+        <!-- PART-TIME ÇALIŞMA HESAPLAYICISI -->
+        <div class="info-box parttime-section">
+            <h3>👔 Part-Time Çalışma Hesaplayıcısı</h3>
+            <p>Bu araç ile <strong>part-time (yarı zamanlı) çalışmanızın</strong> aylık ne kadar ücrete karşılık geldiğini hesaplayabilirsiniz. Lütfen haftalık çalışma programınızı girin.</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                <div class="form-group">
+                    <label for="parttimeDays"><strong>Haftada Kaç Gün Çalışıyorsunuz?</strong></label>
+                    <input type="number" id="parttimeDays" min="1" max="7" step="1" value="3">
+                </div>
+                
+                <div class="form-group">
+                    <label for="parttimeHours"><strong>Günlük Kaç Saat Çalışıyorsunuz?</strong></label>
+                    <input type="number" id="parttimeHours" min="1" max="12" step="0.5" value="6">
+                </div>
+            </div>
+            
+            <button class="calculate-btn parttime-btn" onclick="calculatePartTime()">PART-TIME ÜCRETİ HESAPLA</button>
+            
+            <!-- İKİ SONUÇ KUTUSU (225 VE 195 SAAT) -->
+            <div class="result-container">
+                <div class="single-result">
+                    <div class="method-title">30 Gün / 225 Saat Metoduna Göre</div>
+                    <div class="result-value" id="parttimeResult225">— ₺</div>
+                    <div class="daily-result-value" id="parttimeDailyResult225">— ₺ (günlük)</div>
+                    <p class="explanation" id="parttimeDetail225">Part-time çalışmanın aylık karşılığı.</p>
+                </div>
+                <div class="single-result">
+                    <div class="method-title">26 Gün / 195 Saat Metoduna Göre</div>
+                    <div class="result-value" id="parttimeResult195">— ₺</div>
+                    <div class="daily-result-value" id="parttimeDailyResult195">— ₺ (günlük)</div>
+                    <p class="explanation" id="parttimeDetail195">Part-time çalışmanın aylık karşılığı.</p>
+                </div>
+            </div>
+            <p class="note">Hesaplama, 2026 net asgari ücreti (28.075,50 TL) baz alınarak yapılmaktadır.</p>
+        </div>
+
+        <!-- ASGARİ ÜCRET BİLGİLENDİRMESİ -->
         <div class="info-box">
             <h3>📊 2026 Yılı Asgari Ücret - İki Farklı Hesaplama Metodu</h3>
-            <p>2026 yılı net asgari ücreti <strong>28.075,50 TL</strong>'dir. Aşağıda, yaygın olarak kullanılan iki farklı aylık çalışma süresine göre hesaplanmış saatlik ücretleri karşılaştırabilirsiniz.</p>
+            <p>2026 yılı net asgari ücreti <strong>28.075,50 TL</strong>'dir. Aşağıda, yaygın olarak kullanılan iki farklı aylık çalışma süresine göre hesaplanmış saatlik ve günlük ücretleri karşılaştırabilirsiniz.</p>
             
             <div class="wage-comparison">
                 <!-- Metod 1: 30 Gün / 225 Saat -->
                 <div class="wage-method">
                     <div class="method-title">📅 Metod 1: 30 Gün / 225 Saat</div>
                     <div class="wage-grid">
-                        <div class="wage-item"><span>Saatlik Ücret</span><span class="wage-value" id="hourlyRate225">— ₺</span></div>
-                        <div class="wage-item"><span>Yarım Saatlik</span><span class="wage-value" id="halfHourlyRate225">— ₺</span></div>
-                        <div class="wage-item"><span>Fazla Mesai Saati</span><span class="wage-value" id="overtimeRate225">— ₺</span></div>
-                        <div class="wage-item"><span>Yarım Saat Fazla Mesai</span><span class="wage-value" id="halfOvertimeRate225">— ₺</span></div>
+                        <div class="wage-item">
+                            <span class="wage-label">Saatlik Ücret</span>
+                            <span class="wage-value" id="hourlyRate225">— ₺</span>
+                        </div>
+                        <div class="wage-item">
+                            <span class="wage-label">Yarım Saatlik</span>
+                            <span class="wage-value" id="halfHourlyRate225">— ₺</span>
+                        </div>
+                        <div class="wage-item">
+                            <span class="wage-label">Günlük Ücret (7.5 saat)</span>
+                            <span class="daily-wage-value" id="dailyWage225">— ₺</span>
+                        </div>
+                        <div class="wage-item">
+                            <span class="wage-label">Fazla Mesai Saati</span>
+                            <span class="wage-value" id="overtimeRate225">— ₺</span>
+                        </div>
+                        <div class="wage-item">
+                            <span class="wage-label">Yarım Saat Fazla Mesai</span>
+                            <span class="wage-value" id="halfOvertimeRate225">— ₺</span>
+                        </div>
                     </div>
                 </div>
                 
@@ -525,17 +470,33 @@
                 <div class="wage-method">
                     <div class="method-title">📊 Metod 2: 26 Gün / 195 Saat</div>
                     <div class="wage-grid">
-                        <div class="wage-item"><span>Saatlik Ücret</span><span class="wage-value" id="hourlyRate195">— ₺</span></div>
-                        <div class="wage-item"><span>Yarım Saatlik</span><span class="wage-value" id="halfHourlyRate195">— ₺</span></div>
-                        <div class="wage-item"><span>Fazla Mesai Saati</span><span class="wage-value" id="overtimeRate195">— ₺</span></div>
-                        <div class="wage-item"><span>Yarım Saat Fazla Mesai</span><span class="wage-value" id="halfOvertimeRate195">— ₺</span></div>
+                        <div class="wage-item">
+                            <span class="wage-label">Saatlik Ücret</span>
+                            <span class="wage-value" id="hourlyRate195">— ₺</span>
+                        </div>
+                        <div class="wage-item">
+                            <span class="wage-label">Yarım Saatlik</span>
+                            <span class="wage-value" id="halfHourlyRate195">— ₺</span>
+                        </div>
+                        <div class="wage-item">
+                            <span class="wage-label">Günlük Ücret (7.5 saat)</span>
+                            <span class="daily-wage-value" id="dailyWage195">— ₺</span>
+                        </div>
+                        <div class="wage-item">
+                            <span class="wage-label">Fazla Mesai Saati</span>
+                            <span class="wage-value" id="overtimeRate195">— ₺</span>
+                        </div>
+                        <div class="wage-item">
+                            <span class="wage-label">Yarım Saat Fazla Mesai</span>
+                            <span class="wage-value" id="halfOvertimeRate195">— ₺</span>
+                        </div>
                     </div>
                 </div>
             </div>
             <p class="note">"HESAPLA" butonuna bastığınızda, her iki metoda göre de aylık toplam ücretiniz hesaplanacaktır.</p>
         </div>
         
-        <!-- SADELEŞTİRİLMİŞ YASAL BİLGİLENDİRME -->
+        <!-- YASAL BİLGİLENDİRME -->
         <div class="legal-info">
             <h3>⚖️ Yasal Bilgilendirme</h3>
             <p><strong>Yasal Dayanak:</strong> 4857 sayılı İş Kanunu'nun 41. maddesine göre, haftalık çalışma süresi genel olarak 45 saattir. Bu süreyi aşan çalışmalar fazla mesaidir ve her bir saati için normal ücretin %50 fazlası ödenmelidir.</p>
@@ -557,46 +518,38 @@
         // SABİT DEĞER: 2026 Net Asgari Ücret
         const NET_ASGARI_MAAS = 28075.50;
 
-        // Koyu tema fonksiyonu
-        function toggleTheme() {
-            document.body.classList.toggle('dark-theme');
-            const toggleCheckbox = document.getElementById('themeToggle');
-            toggleCheckbox.checked = !toggleCheckbox.checked;
-            
-            // Tema tercihini localStorage'da sakla
-            const isDarkMode = document.body.classList.contains('dark-theme');
-            localStorage.setItem('darkMode', isDarkMode);
-        }
-
-        // Sayfa yüklendiğinde tema tercihini kontrol et
+        // Sayfa yüklendiğinde asgari ücrete göre ilk ücretleri hesapla ve göster
         document.addEventListener('DOMContentLoaded', function() {
-            const darkMode = localStorage.getItem('darkMode') === 'true';
-            if (darkMode) {
-                document.body.classList.add('dark-theme');
-                document.getElementById('themeToggle').checked = true;
-            }
-            
             calculateInitialRates();
+            calculateOvertime(); // Varsayılan değerlerle hesapla
+            calculateSundayOnly(); // Varsayılan değerlerle hesapla
+            calculatePartTime(); // Varsayılan değerlerle hesapla
         });
 
         // İlk ücretleri hesaplayan fonksiyon (sayfa yüklendiğinde)
         function calculateInitialRates() {
             // Metod 1: 225 Saat
             const hourlyRate225 = NET_ASGARI_MAAS / 225;
+            const dailyWage225 = hourlyRate225 * 7.5; // Günlük 7.5 saat ücreti
+            
             document.getElementById('hourlyRate225').textContent = formatCurrency(hourlyRate225);
             document.getElementById('halfHourlyRate225').textContent = formatCurrency(hourlyRate225 / 2);
+            document.getElementById('dailyWage225').textContent = formatCurrency(dailyWage225);
             document.getElementById('overtimeRate225').textContent = formatCurrency(hourlyRate225 * 1.5);
             document.getElementById('halfOvertimeRate225').textContent = formatCurrency((hourlyRate225 * 1.5) / 2);
             
             // Metod 2: 195 Saat
             const hourlyRate195 = NET_ASGARI_MAAS / 195;
+            const dailyWage195 = hourlyRate195 * 7.5; // Günlük 7.5 saat ücreti
+            
             document.getElementById('hourlyRate195').textContent = formatCurrency(hourlyRate195);
             document.getElementById('halfHourlyRate195').textContent = formatCurrency(hourlyRate195 / 2);
+            document.getElementById('dailyWage195').textContent = formatCurrency(dailyWage195);
             document.getElementById('overtimeRate195').textContent = formatCurrency(hourlyRate195 * 1.5);
             document.getElementById('halfOvertimeRate195').textContent = formatCurrency((hourlyRate195 * 1.5) / 2);
         }
 
-        // Fazla mesai hesaplama fonksiyonu (DOĞRU ve BASİT mantık)
+        // Fazla mesai hesaplama fonksiyonu
         function calculateOvertime() {
             const workDays = parseInt(document.getElementById('workDays').value);
             const dailyHours = parseFloat(document.getElementById('dailyHours').value);
@@ -630,7 +583,7 @@
             document.getElementById('monthlyTotalPay195').textContent = formatCurrency(monthlyTotalPay195);
         }
 
-        // Sadece Pazar ücretini hesaplayan fonksiyon (SABİT MAAŞ)
+        // Sadece Pazar ücretini hesaplayan fonksiyon
         function calculateSundayOnly() {
             const sundayHours = parseFloat(document.getElementById('sundayCalcHours').value) || 0;
             
@@ -658,7 +611,7 @@
             const dailySundayPay225 = weeklySundayPay225;
             const dailySundayPay195 = weeklySundayPay195;
             
-            // Sonuçları Göster (İKİ METOD)
+            // Sonuçları Göster
             document.getElementById('sundayOnlyResult225').textContent = formatCurrency(monthlySundayPay225);
             document.getElementById('sundayOnlyResult195').textContent = formatCurrency(monthlySundayPay195);
             
@@ -667,8 +620,43 @@
             document.getElementById('sundayDailyResult195').textContent = formatCurrency(dailySundayPay195) + " (günlük)";
             
             // Detaylı açıklamaları güncelle
-            document.getElementById('sundayDetail225').innerHTML = `${sundayHours} saat Pazar çalışmanın <strong>aylık</strong> karşılığı.<br>Aylık 8.700 TL ve günlük karşılığı ${formatCurrency(dailySundayPay225)}`;
-            document.getElementById('sundayDetail195').innerHTML = `${sundayHours} saat Pazar çalışmanın <strong>aylık</strong> karşılığı.<br>Aylık 8.700 TL ve günlük karşılığı ${formatCurrency(dailySundayPay195)}`;
+            document.getElementById('sundayDetail225').innerHTML = `${sundayHours} saat Pazar çalışmanın aylık karşılığı. Aylık ~8.700 TL ve günlük karşılığı ${formatCurrency(dailySundayPay225)}`;
+            document.getElementById('sundayDetail195').innerHTML = `${sundayHours} saat Pazar çalışmanın aylık karşılığı. Aylık ~8.700 TL ve günlük karşılığı ${formatCurrency(dailySundayPay195)}`;
+        }
+
+        // Part-Time çalışma ücretini hesaplayan fonksiyon
+        function calculatePartTime() {
+            const parttimeDays = parseInt(document.getElementById('parttimeDays').value) || 3;
+            const parttimeHours = parseFloat(document.getElementById('parttimeHours').value) || 6;
+            
+            // Haftalık toplam saat
+            const weeklyHours = parttimeDays * parttimeHours;
+            
+            // --- METOD 1: 225 Saat için Hesapla ---
+            const hourlyRate225 = NET_ASGARI_MAAS / 225;
+            const weeklyPay225 = weeklyHours * hourlyRate225;
+            const monthlyPay225 = weeklyPay225 * 4.33; // Aylık toplam
+            
+            // --- METOD 2: 195 Saat için Hesapla ---
+            const hourlyRate195 = NET_ASGARI_MAAS / 195;
+            const weeklyPay195 = weeklyHours * hourlyRate195;
+            const monthlyPay195 = weeklyPay195 * 4.33; // Aylık toplam
+            
+            // Günlük ücretleri hesapla
+            const dailyPay225 = weeklyPay225 / parttimeDays;
+            const dailyPay195 = weeklyPay195 / parttimeDays;
+            
+            // Sonuçları Göster
+            document.getElementById('parttimeResult225').textContent = formatCurrency(monthlyPay225);
+            document.getElementById('parttimeResult195').textContent = formatCurrency(monthlyPay195);
+            
+            // Günlük ücretleri göster
+            document.getElementById('parttimeDailyResult225').textContent = formatCurrency(dailyPay225) + " (günlük)";
+            document.getElementById('parttimeDailyResult195').textContent = formatCurrency(dailyPay195) + " (günlük)";
+            
+            // Detaylı açıklamaları güncelle
+            document.getElementById('parttimeDetail225').innerHTML = `${parttimeDays} gün × ${parttimeHours} saat = ${weeklyHours} saat/hafta<br>Part-time çalışmanın aylık karşılığı`;
+            document.getElementById('parttimeDetail195').innerHTML = `${parttimeDays} gün × ${parttimeHours} saat = ${weeklyHours} saat/hafta<br>Part-time çalışmanın aylık karşılığı`;
         }
         
         // Para birimi formatlama fonksiyonu
